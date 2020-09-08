@@ -1,0 +1,37 @@
+-webkit-backface-visibility:hidden;
+-moz-backface-visibility:hidden;
+-ms-backface-visibility:hidden;
+backface-visibility:hidden;
+-webkit-perspective:1000;
+-moz-perspective:1000;
+-ms-perspective:1000;
+perspective:1000;
+
+webkit-transform: translate3d(0,0,0);
+
+-moz-transform: translate3d(0,0,0);
+
+-ms-transform: translate3d(0,0,0);
+
+-o-transform: translate3d(0,0,0);
+
+transform: translate3d(0,0,0);
+
+opacity: 1;或者-webkit-backface-visibility: hidden;。
+
+a、是否导致layout
+如果是，尽可能将动画元素absolute或者fixed化以避免影响文档树，以减少重排.
+
+b、是否启用硬件加速
+“用到了CSS3动画”和“开启了硬件加速”是两件事情，虽然前者有可能导致后者。
+开启硬件加速在webkit中有神奇的万金油：opacity: 1;或者-webkit-backface-visibility: hidden;。
+
+c、是否是有高消耗的属性（css shadow、gradients、background-attachment: fixed等）
+有的话，图片也是一种选择。这算得上是用空间换时间的优化了。
+
+d、repaint的面积
+如果是，只好缩小动画面积了。这一步的优化有限;
+
+e、尽量使用 transform 生成动画，避免使用 height,width,margin,padding 等；如以下例子1和例子2。
+
+PS：使用 transform，浏览器只需要一次生成这个元素的位图，并在动画开始的时候将它提交给 GPU 去处理 。之后，浏览器不需要再做任何布局、 绘制以及提交位图的操作。从而，浏览器可以充分利用 GPU 的特长去快速地将位图绘制在不同的位置、执行旋转或缩放处理。简而言之，transform 动画由GPU控制，支持硬件加速，并不需要软件方面的渲染
